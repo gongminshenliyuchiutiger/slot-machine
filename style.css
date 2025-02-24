@@ -5,8 +5,8 @@ body {
     font-family: 'Orbitron', sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* 垂直置中 */
-    align-items: center; /* 水平置中 */
+    justify-content: center;
+    align-items: center;
     min-height: 100vh;
     margin: 0;
     padding: 0;
@@ -29,10 +29,10 @@ body {
 /* 漂浮圖片樣式 */
 .floating-image {
     position: absolute;
-    width: 50px; /* 初始大小，js會隨機設定 */
+    width: 50px;
     height: 50px;
-    animation: rotate 30s linear infinite; /* 旋轉動畫 */
-    opacity: 0.5; /* 透明度 */
+    animation: rotate 30s linear infinite;
+    opacity: 0.5;
 }
 
 /* 旋轉動畫 */
@@ -68,14 +68,45 @@ h1 {
 }
 
 @keyframes rainbow {
-    0% { color: #f00; text-shadow: 0 0 5px #f00, 0 0 10px #0f0, 0 0 15px #00f; }
-    14% { color: #ff0; text-shadow: 0 0 5px #ff0, 0 0 10px #f00, 0 0 15px #0f0; }
-    28% { color: #0f0; text-shadow: 0 0 5px #0f0, 0 0 10px #ff0, 0 0 15px #f00; }
-    42% { color: #0ff; text-shadow: 0 0 5px #0ff, 0 0 10px #0f0, 0 0 15px #ff0; }
-    57% { color: #00f; text-shadow: 0 0 5px #00f, 0 0 10px #0ff, 0 0 15px #0f0; }
-    71% { color: #f0f; text-shadow: 0 0 5px #f0f, 0 0 10px #00f, 0 0 15px #0ff; }
-    85% { color: #fff; text-shadow: 0 0 5px #fff, 0 0 10px #f0f, 0 0 15px #00f; }
-    100% { color: #f00; text-shadow: 0 0 5px #f00, 0 0 10px #0f0, 0 0 15px #00f; }
+    0% {
+        color: #f00;
+        text-shadow: 0 0 5px #f00, 0 0 10px #0f0, 0 0 15px #00f;
+    }
+
+    14% {
+        color: #ff0;
+        text-shadow: 0 0 5px #ff0, 0 0 10px #f00, 0 0 15px #0f0;
+    }
+
+    28% {
+        color: #0f0;
+        text-shadow: 0 0 5px #0f0, 0 0 10px #ff0, 0 0 15px #f00;
+    }
+
+    42% {
+        color: #0ff;
+        text-shadow: 0 0 5px #0ff, 0 0 10px #0f0, 0 0 15px #ff0;
+    }
+
+    57% {
+        color: #00f;
+        text-shadow: 0 0 5px #00f, 0 0 10px #0ff, 0 0 15px #0f0;
+    }
+
+    71% {
+        color: #f0f;
+        text-shadow: 0 0 5px #f0f, 0 0 10px #00f, 0 0 15px #0ff;
+    }
+
+    85% {
+        color: #fff;
+        text-shadow: 0 0 5px #fff, 0 0 10px #f0f, 0 0 15px #00f;
+    }
+
+    100% {
+        color: #f00;
+        text-shadow: 0 0 5px #f00, 0 0 10px #0f0, 0 0 15px #00f;
+    }
 }
 
 /* 老虎機轉輪樣式 */
@@ -116,7 +147,8 @@ h1 {
 }
 
 /* 按鈕樣式 */
-#spinButton, #resetButton {
+#spinButton,
+#resetButton {
     background-color: transparent;
     color: #fff;
     border: 2px solid;
@@ -132,7 +164,8 @@ h1 {
     box-sizing: border-box;
 }
 
-#spinButton:hover, #resetButton:hover {
+#spinButton:hover,
+#resetButton:hover {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 
@@ -159,6 +192,38 @@ footer {
     box-sizing: border-box;
 }
 
+/* 獲勝訊息樣式 */
+#win-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5em;
+    font-weight: bold;
+    color: #ff0;
+    text-shadow: 0 0 10px #ff0, 0 0 20px #f0f, 0 0 30px #0ff;
+    animation: winAnimation 1s infinite alternate;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
+}
+
+#win-message.show {
+    opacity: 1;
+}
+
+@keyframes winAnimation {
+    from {
+        text-shadow: 0 0 10px #ff0, 0 0 20px #f0f, 0 0 30px #0ff;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    to {
+        text-shadow: 0 0 20px #ff0, 0 0 30px #f0f, 0 0 40px #0ff;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
 /* 媒體查詢：針對小螢幕裝置 */
 @media (max-width: 480px) {
     h1 {
@@ -172,7 +237,8 @@ footer {
         margin: 3px;
     }
 
-    #spinButton, #resetButton {
+    #spinButton,
+    #resetButton {
         font-size: 0.9em;
         padding: 8px 16px;
     }
@@ -180,11 +246,19 @@ footer {
     #play-count {
         font-size: 1em;
     }
+
+    #win-message {
+        font-size: 3em;
+    }
 }
 
 /* 針對極小螢幕 */
 @media (max-width: 320px) {
     h1 {
         font-size: 1.5em;
+    }
+
+    #win-message {
+        font-size: 2em;
     }
 }

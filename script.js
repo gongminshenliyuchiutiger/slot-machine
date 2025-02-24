@@ -5,18 +5,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const spinButton = document.getElementById('spinButton');
     const playCountDiv = document.getElementById('play-count');
     const resetButton = document.getElementById('resetButton');
+    const winMessage = document.getElementById('win-message');
 
     // 每次重新整理都重置遊玩次數
     localStorage.setItem('playCount', 0);
     let playCount = 0;
-
     playCountDiv.textContent = `遊玩次數: ${playCount}`;
 
-    const symbols = ['🍎', '🍌', '🍒', '🍇', '🍊'];
+    // 三種水果
+    const symbols = ['🍎', '🍌', '🍇'];
+
+    // 遊戲狀態
+    let gameActive = true;
 
     function spin() {
-        spinButton.disabled = true;
-        spinButton.textContent = "再試一次";
+        if (!gameActive) return; // 遊戲未激活時，直接返回
+
+        spinButton.disabled = true; // 禁用按鈕
+        spinButton.textContent = "轉動中...";
+        winMessage.classList.remove('show'); // 隱藏獲勝訊息
 
         reel1.classList.add('spinning');
         reel2.classList.add('spinning');
@@ -39,7 +46,17 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('playCount', playCount);
             playCountDiv.textContent = `遊玩次數: ${playCount}`;
 
-            spinButton.disabled = false;
+            // 判斷是否獲勝
+            const win = result1 === result2 && result2 === result3;
+
+            if (win) {
+                winMessage.classList.add('show');
+                spinButton.textContent = "恭喜過關!";
+                gameActive = false; // 獲勝後，停用遊戲
+            } else {
+                spinButton.textContent = "再試一次";
+                spinButton.disabled = false;
+            }
 
         }, 2000);
     }
@@ -51,6 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
         playCount = 0;
         playCountDiv.textContent = `遊玩次數: ${playCount}`;
         spinButton.textContent = "開始轉動";
+        spinButton.disabled = false;
+        winMessage.classList.remove('show');
+        gameActive = true; // 重新挑戰時，啟用遊戲
     });
 
     // 動態生成漂浮圖片
