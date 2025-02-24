@@ -1,14 +1,24 @@
+/* 霓虹燈風格 */
 body {
+    background-color: #000;
+    color: #fff;
     font-family: sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f0f0f0;
 }
 
 .container {
     text-align: center;
+}
+
+h1 {
+    font-family: 'Bungee Shade', cursive;
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff;
+    font-size: 3em;
+    margin-bottom: 30px;
 }
 
 .slot {
@@ -19,22 +29,69 @@ body {
 .reel {
     width: 100px;
     height: 100px;
-    border: 1px solid #ccc;
+    border: 2px solid #0ff;
+    box-shadow: 0 0 10px #0ff;
+    background-color: #111;
     margin: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 2em;
+    animation: none; /* 初始狀態沒有動畫 */
+    transition: all 0.2s ease-in-out;
+}
+
+.reel.spinning {
+    animation: spin 0.5s infinite; /* 快速旋轉 */
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 #spinButton {
-    padding: 10px 20px;
-    font-size: 1.2em;
+    background-color: #0ff;
+    color: #000;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.3em;
     cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #0ff;
+    transition: all 0.2s ease-in-out;
+}
+
+#spinButton:hover {
+    background-color: #0af;
+    box-shadow: 0 0 15px #0ff;
 }
 
 #result {
     margin-top: 20px;
     font-size: 1.5em;
     font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 5px #0ff;
+}
+
+#result.win {
+    animation: winAnimation 1s infinite alternate;
+}
+
+@keyframes winAnimation {
+    from { transform: scale(1); color: #fff; }
+    to { transform: scale(1.2); color: #ff0; }
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #111;
+    font-size: 0.8em;
+    color: #888;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
 }
