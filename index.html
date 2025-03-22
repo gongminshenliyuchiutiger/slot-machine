@@ -1,18 +1,206 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>角子老虎遊戲系統</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-</head>
+    <style>
+        /* 全域設定 */
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
 
+        /* 漂浮圖片容器樣式 */
+        #floating-images-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* 漂浮圖片樣式 */
+        .floating-image {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            animation: rotate 30s linear infinite;
+            opacity: 0.5;
+        }
+
+        /* 旋轉動畫 */
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            max-height: 80vh;
+            padding: 30px;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            margin-bottom: 20px;
+            overflow: auto;
+            box-sizing: border-box;
+        }
+
+        /* 標題樣式 */
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 5px #f00, 0 0 10px #0f0, 0 0 15px #00f, 0 0 20px #f0f, 0 0 25px #ff0, 0 0 30px #0ff;
+            font-size: 3em;
+            margin-bottom: 30px;
+        }
+
+        @keyframes rainbow {
+            0% { color: #f00; text-shadow: 0 0 5px #f00, 0 0 10px #0f0, 0 0 15px #00f; }
+            14% { color: #ff0; text-shadow: 0 0 5px #ff0, 0 0 10px #f00, 0 0 15px #0f0; }
+            28% { color: #0f0; text-shadow: 0 0 5px #0f0, 0 0 10px #ff0, 0 0 15px #f00; }
+            42% { color: #0ff; text-shadow: 0 0 5px #0ff, 0 0 10px #0f0, 0 0 15px #ff0; }
+            57% { color: #00f; text-shadow: 0 0 5px #00f, 0 0 10px #0ff, 0 0 15px #0f0; }
+            71% { color: #f0f; text-shadow: 0 0 5px #f0f, 0 0 10px #00f, 0 0 15px #0ff; }
+            85% { color: #fff; text-shadow: 0 0 5px #fff, 0 0 10px #f0f, 0 0 15px #00f; }
+            100% { color: #f00; text-shadow: 0 0 5px #f00, 0 0 10px #0f0, 0 0 15px #00f; }
+        }
+
+        /* 老虎機轉輪樣式 */
+        .slot {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .reel {
+            width: 80px;
+            height: 80px;
+            border: 2px solid;
+            border-image: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f) 1;
+            background-color: #111;
+            margin: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            animation: none;
+            transition: all 0.2s ease-in-out;
+            box-sizing: border-box;
+        }
+
+        .reel.spinning {
+            animation: spin 0.5s infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 按鈕樣式 */
+        #spinButton, #resetButton {
+            background-color: transparent;
+            color: #fff;
+            border: 2px solid;
+            border-image: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f) 1;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease-in-out;
+            margin: 0 auto 20px;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        #spinButton:hover, #resetButton:hover {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Footer 樣式 */
+        footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 0.7em;
+            color: #888;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* 重新挑戰按鈕樣式 */
+        #resetButton {
+            margin-top: 0;
+        }
+
+        /* 遊玩次數樣式 */
+        #play-count {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 獲勝訊息樣式 */
+        #win-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            font-weight: bold;
+            color: #ff0;
+            text-shadow: 0 0 10px #ff0, 0 0 20px #f0f, 0 0 30px #0ff;
+            animation: winAnimation 1s infinite alternate;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+        }
+
+        #win-message.show {
+            opacity: 1;
+        }
+
+        @keyframes winAnimation {
+            from { text-shadow: 0 0 10px #ff0, 0 0 20px #f0f, 0 0 30px #0ff; transform: translate(-50%, -50%) scale(1); }
+            to { text-shadow: 0 0 20px #ff0, 0 0 30px #f0f, 0 0 40px #0ff; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* 媒體查詢：針對小螢幕裝置 */
+        @media (max-width: 480px) {
+            h1 { font-size: 2em; }
+            .reel { width: 50px; height: 50px; font-size: 1em; margin: 3px; }
+            #spinButton, #resetButton { font-size: 0.9em; padding: 8px 16px; }
+            #play-count { font-size: 1em; }
+            #win-message { font-size: 3em; }
+        }
+
+        /* 針對極小螢幕 */
+        @media (max-width: 320px) {
+            h1 { font-size: 1.5em; }
+            #win-message { font-size: 2em; }
+        }
+    </style>
+</head>
 <body>
     <div class="container">
         <h1>角子老虎遊戲系統</h1>
-
         <div class="slot">
             <div class="reel" id="reel1">🍎</div>
             <div class="reel" id="reel2">🍌</div>
@@ -21,15 +209,112 @@
         <button id="spinButton">開始轉動</button>
         <div id="play-count">遊玩次數: 0</div>
         <button id="resetButton">重新挑戰</button>
-
         <div id="win-message">恭喜過關！</div>
     </div>
-
     <footer>
         <p>Copyright © Liyuchiutiger Gongminshen</p>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reel1 = document.getElementById('reel1');
+            const reel2 = document.getElementById('reel2');
+            const reel3 = document.getElementById('reel3');
+            const spinButton = document.getElementById('spinButton');
+            const playCountDiv = document.getElementById('play-count');
+            const resetButton = document.getElementById('resetButton');
+            const winMessage = document.getElementById('win-message');
 
-    <script src="script.js"></script>
+            localStorage.setItem('playCount', 0);
+            let playCount = 0;
+            playCountDiv.textContent = `遊玩次數: ${playCount}`;
+
+            const symbols = ['🍎', '🍌', '🍇'];
+            let gameActive = true;
+
+            function spin() {
+                if (!gameActive) return;
+
+                spinButton.disabled = true;
+                spinButton.textContent = "轉動中...";
+                winMessage.classList.remove('show');
+
+                reel1.classList.add('spinning');
+                reel2.classList.add('spinning');
+                reel3.classList.add('spinning');
+
+                setTimeout(() => {
+                    reel1.classList.remove('spinning');
+                    reel2.classList.remove('spinning');
+                    reel3.classList.remove('spinning');
+
+                    const result1 = symbols[Math.floor(Math.random() * symbols.length)];
+                    const result2 = symbols[Math.floor(Math.random() * symbols.length)];
+                    const result3 = symbols[Math.floor(Math.random() * symbols.length)];
+
+                    reel1.textContent = result1;
+                    reel2.textContent = result2;
+                    reel3.textContent = result3;
+
+                    playCount++;
+                    localStorage.setItem('playCount', playCount);
+                    playCountDiv.textContent = `遊玩次數: ${playCount}`;
+
+                    const win = result1 === result2 && result2 === result3;
+
+                    if (win) {
+                        winMessage.classList.add('show');
+                        spinButton.textContent = "恭喜過關!";
+                        gameActive = false;
+                    } else {
+                        spinButton.textContent = "再試一次";
+                        spinButton.disabled = false;
+                    }
+                }, 2000);
+            }
+
+            spinButton.addEventListener('click', spin);
+
+            resetButton.addEventListener('click', () => {
+                localStorage.setItem('playCount', 0);
+                playCount = 0;
+                playCountDiv.textContent = `遊玩次數: ${playCount}`;
+                spinButton.textContent = "開始轉動";
+                spinButton.disabled = false;
+                winMessage.classList.remove('show');
+                gameActive = true;
+            });
+
+            const floatingImagesContainer = document.createElement('div');
+            floatingImagesContainer.id = 'floating-images-container';
+            document.body.appendChild(floatingImagesContainer);
+
+            const numberOfImages = 20;
+            const imagePath = 'image/LiyuChillGuy(W).svg';
+
+            for (let i = 0; i < numberOfImages; i++) {
+                const img = document.createElement('img');
+                img.src = imagePath;
+                img.classList.add('floating-image');
+
+                const gridX = Math.floor(i % 5);
+                const gridY = Math.floor(i / 5);
+                const gridSize = 100 / 5;
+
+                const randomOffset = gridSize * 0.2;
+                const offsetX = -randomOffset + Math.random() * randomOffset * 2;
+                const offsetY = -randomOffset + Math.random() * randomOffset * 2;
+
+                img.style.top = `${gridSize * gridY + offsetY}%`;
+                img.style.left = `${gridSize * gridX + offsetX}%`;
+
+                const size = 70 + Math.random() * 100;
+                img.style.width = `${size}px`;
+                img.style.height = `${size}px`;
+
+                img.style.animationDelay = `${Math.random() * 10}s`;
+                floatingImagesContainer.appendChild(img);
+            }
+        });
+    </script>
 </body>
-
 </html>
